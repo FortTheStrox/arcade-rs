@@ -1,2 +1,2 @@
 # Arcade-rs
-##Rust Practice with SDL2
+## Rust Practice with SDL2
