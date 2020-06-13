@@ -1,2 +1,2 @@
 # Arcade-rs
-## Rust Practice with SDL2
+This little project is practice with Rust and the sdl2 crate.
