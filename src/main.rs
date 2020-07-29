@@ -45,7 +45,7 @@ fn main() {
     loop {
         events.pump();
 
-        if (events.now.key_escape == Some(true)) || (events.now.key_q == Some(true)) {
+        if events.now.quit ||  events.now.key_escape == Some(true) {
             break;
         }
         // Render a fully black window

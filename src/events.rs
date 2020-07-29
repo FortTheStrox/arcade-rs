@@ -13,7 +13,8 @@ macro_rules! struct_events {
             // Some(true)  => Was just pressed
             // Some(false) => Was just released
             // None        => Nothing happening _now_
-            $( pub $k_alias: Option<bool>),*
+            $( pub $k_alias: Option<bool>, )*
+            $( pub $e_alias: bool),*
         }
 
         impl ImmediateEvents {
@@ -21,7 +22,8 @@ macro_rules! struct_events {
                 ImmediateEvents {
                     // When reinitialized, nothing has yet happened, so all are
                     // set to None
-                    $( $k_alias: None),*
+                    $( $k_alias: None, )*
+                    $( $e_alias: false),*
                 }
             }
         }
@@ -57,15 +59,21 @@ macro_rules! struct_events {
 
                     match event {
                         KeyDown { keycode, .. } => match keycode {
+                            // $( ... ),* containing $k_sdl and $k_alias means:
+                            //     "for every element ($k_alias : $k_sdl) pair,
+                            //      check whether the keycode is Some($k_sdl). If
+                            //      it is, then set the $k_alias fields to true."
                             $(
                                 Some($k_sdl) => {
+                                    // Prevent multiple presses when keeping a key down
+                                    // was previous not pressed?
                                     if !self.$k_alias {
                                         self.now.$k_alias = Some(true);
                                     }
 
                                     self.$k_alias = true;
                                 }
-                            ),*
+                            ),* // and add a comma after every option
                             _ => {}
                         },
                         KeyUp { keycode, .. } => match keycode {
@@ -78,6 +86,11 @@ macro_rules! struct_events {
                             ),*
                             _ => {}
                         },
+                        $(
+                            $e_sdl => {
+                                self.now.$e_alias = true;
+                            }
+                        )*,
                         _ => {}
                     }
                 }
