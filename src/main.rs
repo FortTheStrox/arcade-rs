@@ -12,10 +12,13 @@ mod events;
 use sdl2::pixels::Color;
 
 struct_events!{
+    // These are the current keyboard buttons that programmed in
+    // if you don't see a key in here then by default it does nothing (so far)
     keyboard: {
         key_escape: Escape,
         key_up: Up,
-        key_down: Down
+        key_down: Down,
+        key_q: Q
     },
     else: {
         quit: Quit {..}
@@ -42,7 +45,7 @@ fn main() {
     loop {
         events.pump();
 
-        if events.now.key_escape == Some(true) {
+        if (events.now.key_escape == Some(true)) || (events.now.key_q == Some(true)) {
             break;
         }
         // Render a fully black window
